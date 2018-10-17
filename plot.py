@@ -114,11 +114,11 @@ class Plot():
         plt.colorbar(im, spacing='uniform', drawedges='True')
         plt.xticks(np.linspace(0, len(round_ticks) - 1, len(round_ticks)), round_ticks)
         plt.yticks(np.linspace(0, len(states) - 1, len(states)), list(states), rotation='horizontal')
-        plt.show()
-
+        
         kwargs = {'words': 'word frequencies'}
         if self.save_figure:
             self.save_markov_figure(**kwargs)
+        plt.show()
 
 
     def plot_box_word_probabilities(self, states, word_game_counts):
@@ -167,7 +167,7 @@ class Plot():
         file_string = 'Agents {}, repeats {}, rounds {}, reward {}, graph {}'
 
         for k, v in kwargs.items():
-            file_string += ', ' + k + ' {' + v + '}'
+            file_string += ', ' + ' {' + k + '}'
         if self.save_figure:
             plt.savefig(self.path + file_string.format(self.number_of_agents, self.number_of_repeats,
                                                         self.number_of_rounds, self.reward,
