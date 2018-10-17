@@ -65,13 +65,12 @@ class Plot():
         ml = AutoMinorLocator()
         ax.plot(x, y, 'silver')
         #filtered = lowess(y, x, is_sorted=True, frac=0.1, it=0)
-        ax.plot(x, y, 'silver')
-        popt = self.fit_nonconvergent_sigmoid(x,y)
+        popt, pcov = self.fit_nonconvergent_sigmoid(x,y)
         ax.plot(x, self.nonconvergent_sigmoid(x, *popt), color='navy', linewidth=1)
         print(popt)
         #ax.plot(filtered[:, 0], filtered[:, 1], 'navy', linewidth=0.8)
 
-        self.save_markov_to_archive(np.linspace(0, original_number_of_rounds, self.number_of_rounds), y, original_number_of_rounds)
+       
         ax.set_xlabel('$t$')
         ax.set_ylabel('$S(t)$', rotation=90)
         ax.xaxis.set_minor_locator(ml)
@@ -82,7 +81,7 @@ class Plot():
 
         if self.save_figure:
             self.save_markov_figure(**kwargs)
-            self.save_markov_to_archive(x,y,self.plot_time_intervals)
+             self.save_markov_to_archive(np.linspace(0, original_number_of_rounds, self.number_of_rounds), y, original_number_of_rounds)
         plt.show()
 
 
