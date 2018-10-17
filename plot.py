@@ -81,7 +81,7 @@ class Plot():
 
         if self.save_figure:
             self.save_markov_figure(**kwargs)
-             self.save_markov_to_archive(np.linspace(0, original_number_of_rounds, self.number_of_rounds), y, original_number_of_rounds)
+            self.save_markov_to_archive(np.linspace(0, original_number_of_rounds, self.number_of_rounds), y, original_number_of_rounds)
         plt.show()
 
 
@@ -94,10 +94,10 @@ class Plot():
         im = plt.imshow(sum_associations, aspect='auto', interpolation="nearest", origin="upper", cmap='PuBu')
         #ax.title('association frequencies of the last round')
         plt.colorbar(im, spacing='uniform', drawedges='True')
-        plt.xticks(np.linspace(0, len(wordvec) - 1, len(wordvec)), list(wordvec), rotation='horizontal')
-        plt.yticks(np.linspace(0, len(wordvec) - 1, len(wordvec)), list(wordvec), rotation='horizontal')
+        plt.xticks(np.linspace(0, len(states) - 1, len(states)), list(states), rotation='horizontal')
+        plt.yticks(np.linspace(0, len(states) - 1, len(states)), list(states), rotation='horizontal')
 
-        kwargs = {'words': len(wordvec)}
+        kwargs = {'words': len(states)}
         if self.save_figure:
             self.save_markov_figure(**kwargs)
         plt.show()
@@ -135,26 +135,26 @@ class Plot():
 
 
     def plot_box_word_probabilities_of_connects(self, states, pre_connects0, pre_connects1,
-                                                postconnect0, postconnects1):
-        df00 = pd.DataFrame(preconnects0[0][0], columns=wordvec)
-        df01 = pd.DataFrame(preconnects1[0][0], columns=wordvec)
-        df10 = pd.DataFrame(postconnects0[0][0], columns=wordvec)
-        df11 = pd.DataFrame(postconnects1[0][0], columns=wordvec)
+                                                post_connects0, post_connects1):
+        df00 = pd.DataFrame(pre_connects0[0][0], columns=states)
+        df01 = pd.DataFrame(pre_connects1[0][0], columns=states)
+        df10 = pd.DataFrame(post_connects0[0][0], columns=states)
+        df11 = pd.DataFrame(post_connects1[0][0], columns=states)
 
         ax = {'0': [0, 0], '1': [1, 0],
               '2': [0, 1], '3': [1, 1]}
 
-        axes[0, 0].set_ylabel('word probabilities, topology 0', fontsize=8)
-        axes[1, 0].set_ylabel('word probabilities, topology 1', fontsize=8)
-        axes[1, 0].set_xlabel('words', fontsize=8)
-        axes[1, 1].set_xlabel('words', fontsize=8)
-        axes[0, 1].set_title('after connecting topologies', fontsize=9)
-        axes[0, 0].set_title('before connecting topologies', fontsize=9)
+        ax[0, 0].set_ylabel('word probabilities, topology 0', fontsize=8)
+        ax[1, 0].set_ylabel('word probabilities, topology 1', fontsize=8)
+        ax[1, 0].set_xlabel('words', fontsize=8)
+        ax[1, 1].set_xlabel('words', fontsize=8)
+        ax[0, 1].set_title('after connecting topologies', fontsize=9)
+        ax[0, 0].set_title('before connecting topologies', fontsize=9)
 
         for i, c in enumerate([df00, df01, df10, df11]):
             ax0 = ax[str(i)][0]
             ax1 = ax[str(i)][1]
-            c.boxplot(ax=axes[ax0, ax1], showfliers=False)
+            c.boxplot(ax=ax[ax0, ax1], showfliers=False)
 
         kwargs = {'type': 'boxplot'}
         if self.save_figure:
