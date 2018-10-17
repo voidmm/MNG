@@ -16,7 +16,7 @@ def language_game(number_of_agents, number_of_rounds, plot_time_points, word_fre
 
 	for agent_int in range(number_of_agents):
 		agents[str(agent_int)] = {'id': agent_int, 
-								  'word memory': deepcopy(initial_word_memory),
+							'word memory': deepcopy(initial_word_memory),
 								  'word transitions': pykov.Chain(deepcopy(initial_word_transitions))}
 
 
