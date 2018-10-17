@@ -20,7 +20,7 @@ class GraphtoMarkovMatrix():
             for string_literal in self.vertex_names[:self.number_of_states]:
                 self.states[string_literal] = 1 / self.number_of_states
         else:
-            print('please choose a language construct that has fewer than 24 vertexs')
+            print('please choose a language construct that has fewer than 24 vertexes')
 
     def get_state_names(self):
         return list(self.states.keys())
