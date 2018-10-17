@@ -17,7 +17,7 @@ class GraphtoMarkovMatrix():
 
     def set_states_uniform(self):
         if self.number_of_states < len(self.vertex_names):
-            for string_literal in vertex_names[:self.number_of_states]:
+            for string_literal in self.vertex_names[:self.number_of_states]:
                 self.states[string_literal] = 1 / self.number_of_states
         else:
             print('please choose a language construct that has fewer than 24 vertexs')
