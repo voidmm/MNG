@@ -12,18 +12,22 @@ from statsmodels.nonparametric.smoothers_lowess import lowess
 
 class Plot():
 
-    def __init__(self, history, save_figure, path, number_of_agents, number_of_repeats,
-                 number_of_rounds, plot_time_intervals, reward, language_construct_filename):
-        self.history = history
-        self.save_figure = save_figure
-        self.path = path
-        self.number_of_agents = number_of_agents
-        self.number_of_repeats = number_of_repeats
-        self.number_of_rounds = number_of_rounds
-        self.plot_time_intervals = plot_time_intervals
-        self.reward = reward
+    def __init__(self):
+        params = eval(open('parameters.txt').read())
+        self.save_figure = eval(params['save_figure'])
+        self.path = params['plot_path']
+        self.number_of_agents = params['number_of_agents']
+        self.number_of_repeats = params['number_of_repeats']
+        self.number_of_rounds = params['number_of_rounds']
+        self.plot_time_intervals = params['plot_time_intervals']
+        self.reward = params['reward']
         self.extrapolation_factor = int(np.ceil(self.number_of_rounds / 10000))
-        self.language_construct_filename = language_construct_filename
+        self.language_construct_filename = params['language_construct_filename']
+
+    def set_params(selfs, filename):
+        params = eval(open('parameters.txt').read())
+
+
 
 
     def sigmoid(self, x, a, b, c):
@@ -48,9 +52,9 @@ class Plot():
         return popt
 
 
-    def plot_sigmoid(self):
+    def plot_sigmoid(self, history):
         original_number_of_rounds = self.number_of_rounds
-        mean_history = np.sum(self.history, axis=0)
+        mean_history = np.sum(history, axis=0)
 
         if self.extrapolation_factor >= 2:
             mean_history = mean_history[0::self.extrapolation_factor]
@@ -65,8 +69,8 @@ class Plot():
         ml = AutoMinorLocator()
         ax.plot(x, y, 'silver')
         #filtered = lowess(y, x, is_sorted=True, frac=0.1, it=0)
-        popt, pcov = self.fit_nonconvergent_sigmoid(x,y)
-        ax.plot(x, self.nonconvergent_sigmoid(x, *popt), color='navy', linewidth=1)
+        popt= self.fit_sigmoid(x,y)
+        ax.plot(x, self.sigmoid(x, *popt), color='navy', linewidth=1)
         print(popt)
         #ax.plot(filtered[:, 0], filtered[:, 1], 'navy', linewidth=0.8)
 
@@ -79,9 +83,8 @@ class Plot():
 
         kwargs = {'type': 'sigmoid'}
 
-        if self.save_figure:
-            self.save_markov_figure(**kwargs)
-            self.save_markov_to_archive(np.linspace(0, original_number_of_rounds, self.number_of_rounds), y, original_number_of_rounds)
+        self.save_markov_figure(**kwargs)
+        self.save_markov_to_archive(np.linspace(0, original_number_of_rounds, self.number_of_rounds), y, original_number_of_rounds)
         plt.show()
 
 
@@ -98,8 +101,8 @@ class Plot():
         plt.yticks(np.linspace(0, len(states) - 1, len(states)), list(states), rotation='horizontal')
 
         kwargs = {'words': len(states)}
-        if self.save_figure:
-            self.save_markov_figure(**kwargs)
+
+        self.save_markov_figure(**kwargs)
         plt.show()
 
 
@@ -115,8 +118,8 @@ class Plot():
         plt.yticks(np.linspace(0, len(states) - 1, len(states)), list(states), rotation='horizontal')
         
         kwargs = {'words': 'word frequencies'}
-        if self.save_figure:
-            self.save_markov_figure(**kwargs)
+
+        self.save_markov_figure(**kwargs)
         plt.show()
 
 
@@ -129,8 +132,8 @@ class Plot():
         #ax.set_title('mean word probabilities over all games')
 
         kwargs = {'game counts': 'game counts'}
-        if self.save_figure:
-            self.save_markov_figure(**kwargs)
+
+        self.save_markov_figure(**kwargs)
         plt.show()
 
 
@@ -157,8 +160,8 @@ class Plot():
             c.boxplot(ax=ax[ax0, ax1], showfliers=False)
 
         kwargs = {'type': 'boxplot'}
-        if self.save_figure:
-            self.save_markov_figure(**kwargs)
+
+        self.save_markov_figure(**kwargs)
         plt.show()
 
 
@@ -173,9 +176,17 @@ class Plot():
                                                         self.language_construct_filename, **kwargs) + '.png',
                                                         dpi=300)
 
-
     def save_markov_to_archive(self, x, y, plot_time_intervals):
-        
+
         file_name = str(self.path) +'markov' + str(self.number_of_agents) + ', ' + str(self.number_of_repeats) + ', ' \
                              + str(self.number_of_rounds) + ', ' + str(self.reward) + ', ' + str(self.language_construct_filename)
         np.savez(file_name + '.npz', name1=x, name2=y,  name3=plot_time_intervals)
+
+
+    def save_word_frequencies_to_archive(self, word_frequencies, word_associations, word_game_counts, states):
+        filename = 'word frequency data/' + 'nonconv' + str(self.number_of_agents) + ', ' + str(
+            self.number_of_repeats) + ', ' + str(
+            self.number_of_rounds) + ', ' + str(self.reward) + ', ' + self.language_construct_filename
+        np.savez(filename + '.npz', name1=word_frequencies, name2=word_associations, name3=word_game_counts, name4=states)
+
+

@@ -8,47 +8,23 @@ from createagentmemory import createagentmemory
 from multiprocessing import Pool, cpu_count
 
 
-"""
-
-Define parameters of the Probabilistic Naming Game
-
-insert the path where the plots of the success history should be saved
-decide whether you want to save the figure
-the number of agents that partake in each game
-the number of rounds defined the number of rounds of one probabilistic naming game
-the reward that is applied to the probability of a word that was used by both agents to
-name the object
-the number of repeats defines the number of total, individual games that are played
-the number of times two disjunct communities will be connected
-"""
 
 CPU_COUNT = cpu_count()
 
-plot_path = 'reward_progressions/'
+params = eval(open('parameters.txt').read())
 
-graph_path = 'graphexports/'
+number_of_repeats = params['number_of_repeats']
+number_of_rounds = params['number_of_rounds']
+number_of_agents = params['number_of_agents']
+reward = params['reward']
 
-language_construct_filename = '9wattsstrogatz00'
-
-save_figure = False
-
-number_of_agents = 100
-
-number_of_rounds = 1000
-
-reward = 5
-
-number_of_repeats = 50
+plot_time_intervals = params['plot_time_intervals']
+plot_time_points = number_of_rounds / plot_time_intervals
 
 if number_of_repeats % CPU_COUNT != 0:
     number_of_repeats -= number_of_repeats % CPU_COUNT
 
-plot_time_intervals = 10
-plot_time_points = number_of_rounds / plot_time_intervals
-
-word_frequencies, initial_word_memory, initial_word_transitions, states = createagentmemory(graph_path, language_construct_filename, 
-                                                                    number_of_rounds, plot_time_intervals)
-
+word_frequencies, initial_word_memory, initial_word_transitions, states = createagentmemory('parameters.txt')
 
 def games(number_of_repeats, word_frequencies):
     aggregated_history = []
@@ -79,17 +55,12 @@ if __name__ == "__main__":
     word_game_counts = [p.get()[1]['word game counts'] for p in output]
     word_game_counts = np.reshape(word_game_counts, (number_of_repeats, len(initial_word_memory)))
 
-    filename = 'word frequency data/' + 'nonconv' + str(number_of_agents) + ', ' + str(number_of_repeats) + ', ' + str(
-        number_of_rounds) + ', ' + str(reward) + ', ' + language_construct_filename
-    np.savez(filename + '.npz', name1=word_frequencies, name2=word_associations, name3=word_game_counts, name4=states)
-
     end = time.time()
     print('Required time, in seconds: '+ str(end - start))
 
-    Plot = Plot(history, save_figure, plot_path, number_of_agents, number_of_repeats,
-                  number_of_rounds, plot_time_intervals,
-                  reward, language_construct_filename)
-    
-    Plot.plot_sigmoid()
+    Plot = Plot()
+    Plot.plot_sigmoid(history)
     Plot.plot_box_word_probabilities([i[0] for i in initial_word_memory], word_game_counts)
     Plot.plot_word_frequency([i[0] for i in initial_word_memory], word_frequencies)
+
+    #Plot.save_word_frequencies_to_archive(word_frequencies,word_associations,word_game_counts,states)

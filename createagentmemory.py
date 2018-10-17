@@ -3,9 +3,12 @@ import numpy as np
 import igraph as ig
 
 
-def createagentmemory(graph_path, language_construct_filename, number_of_rounds, plot_time_intervals):
-    language_construct = ig.Graph.Read_Pickle(fname=graph_path + language_construct_filename)
-    pyk = GraphtoMarkovMatrix(language_construct, vertex_weights='degree')
+def createagentmemory(filename):
+
+    params = eval(open(filename).read())
+
+    language_construct = ig.Graph.Read_Pickle(fname=params['graph_path'] + params['language_construct_filename'])
+    pyk = GraphtoMarkovMatrix(language_construct, vertex_weights=params['init_states'])
 
     initial_word_memory = pyk.get_pykov_vector()
     initial_word_transitions = pyk.get_symmetric_pykov_matrix()
