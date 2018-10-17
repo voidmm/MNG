@@ -24,11 +24,6 @@ class Plot():
         self.extrapolation_factor = int(np.ceil(self.number_of_rounds / 10000))
         self.language_construct_filename = params['language_construct_filename']
 
-    def set_params(selfs, filename):
-        params = eval(open('parameters.txt').read())
-
-
-
 
     def sigmoid(self, x, a, b, c):
         np.seterr(all='warn')
