@@ -1,0 +1,12 @@
+{
+	'plot_path' : 'reward_progressions/',
+	'graph_path' : 'graphexports/';
+	'language_construct_filename' : '9wattsstrogatz00',
+	'save_figure' : 'False',
+	'save_npz' : 'False',
+	'number_of _agents' : '10',
+	'number_of_rounds' : '20',
+	'number_of_repeats' : '10',
+	'reward' : '5',
+	'init_states' : 'degree'
+}
