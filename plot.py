@@ -176,8 +176,8 @@ class Plot():
                                                         self.language_construct_filename, **kwargs) + '.png',
                                                         dpi=300)
 
-    def save_markov_to_archive(self, x, y, plot_time_intervals):
 
+    def save_markov_to_archive(self, x, y, plot_time_intervals):
         file_name = str(self.path) +'markov' + str(self.number_of_agents) + ', ' + str(self.number_of_repeats) + ', ' \
                              + str(self.number_of_rounds) + ', ' + str(self.reward) + ', ' + str(self.language_construct_filename)
         np.savez(file_name + '.npz', name1=x, name2=y,  name3=plot_time_intervals)
